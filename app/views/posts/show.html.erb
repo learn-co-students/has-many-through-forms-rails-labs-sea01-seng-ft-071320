@@ -1,1 +1,37 @@
+<h1><%= @post.title %></h1>
+<br>
 
+<p><%= @post.content %></p>
+<br>
+
+<h3>Comment Below</h3>
+<br>
+
+<ul>
+<% @post.comments.each do |comment| %>
+  <li><%= "#{comment.user.username} says: #{comment.content}"%>
+<% end %>
+</ul>
+
+<% @comment = Comment.new %>
+
+<%= form_for @comment do |f| %>
+
+  <%= collection_select :comment :user_id, User.all, :id, :username %>
+  <br>
+
+  <%= f.fields_for :user, User.new do |u| %>
+    <%= u.text_field :username, list: :username_autocomplete %>
+    <datalist id='username_autocomplete'>
+      <% User.all.each do |user| %>
+        <option value=<%= user.username %>>
+      <% end %>
+    </datalist>
+  <% end %>
+
+  <%= f.text_area :content %>
+  <br>
+
+  <%= f.hidden_field :post_id, value: @post.id %>
+  <%= f.submit %>
+<% end %>
