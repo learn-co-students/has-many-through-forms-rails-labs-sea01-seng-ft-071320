@@ -15,23 +15,19 @@
 
 <% @comment = Comment.new %>
 
-<%= form_for @comment do |f| %>
+<%= form_for @post.comments.build do |f| %>
+  <%= f.hidden_field :post_id, value: @post.id %>
 
-  <%= collection_select :comment :user_id, User.all, :id, :username %>
+  <%= collection_select :comment, :user_id, User.all, :id, :username %>
   <br>
 
   <%= f.fields_for :user, User.new do |u| %>
-    <%= u.text_field :username, list: :username_autocomplete %>
-    <datalist id='username_autocomplete'>
-      <% User.all.each do |user| %>
-        <option value=<%= user.username %>>
-      <% end %>
-    </datalist>
+    <%= u.label :username %>
+    <%= u.text_field :username %>
   <% end %>
 
   <%= f.text_area :content %>
   <br>
 
-  <%= f.hidden_field :post_id, value: @post.id %>
   <%= f.submit %>
 <% end %>
